@@ -18,12 +18,16 @@ public class Game extends JPanel {
 	JFrame frame = new JFrame("Mini Tennis");
 	Ball ball = new Ball(this);
 	Racquet racquet = new Racquet(this);
-	int speed = 1;
+	private double speed = 2;
+	private int Score = 0;
 	ArrayList<Brick> bricks = new ArrayList<Brick>();
+	ArrayList<Brick> bricksForDelate = new ArrayList<Brick>();
 	
-
-	private int getScore() {
-		return speed - 1;
+	public void setScore(int score) {
+		Score = score;
+	}
+	public int getScore() {
+		return Score;
 	}
 
 	public Game() {
@@ -46,9 +50,22 @@ public class Game extends JPanel {
 		// Sound.BACK.loop();
 	}
 
+	public double getSpeed() {
+		return this.speed;
+	}
+
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+
+	
 	private void move() {
 		ball.move();
 		racquet.move();
+		for(Brick brick : bricks) {
+			brick.checkCollision();
+		}
+		delteBricks();
 	}
 
 	@Override
@@ -129,6 +146,17 @@ public class Game extends JPanel {
 
 	public int getFrameWidth() {
 		return frame.getWidth();
+	}
+
+	public void delteBricks() {
+		for(Brick brick : bricksForDelate) {
+			bricks.remove(brick);
+		}
+		bricksForDelate.clear();
+	}
+
+	public void delteBrick(Brick brick) {
+		bricksForDelate.add(brick);
 	}
 
 

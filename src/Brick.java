@@ -27,19 +27,29 @@ abstract public class Brick {
 		g.fillRect(x, y, width, height);
         //paint rect with color
 
-
-
-
-
-
 	}
 
+    public void checkCollision(){
+		boolean colision =  collisionWithBall();
+        System.out.println(colision);
+		if (colision){
+            //hide block 
+            game.ball.oppositeWay();
+            delteBrick();
+		} 
+    }
+
+	private boolean collisionWithBall() {
+		return game.ball.getBounds().intersects(getBounds());
+
+	}
 	public Rectangle getBounds() {
 		return new Rectangle(x, y, width, height);
 	}
     
     public void delteBrick() {
-        this.x = -100;
-        this.y = -100;
+        // this.x = -100;
+        // this.y = -100;
+        game.delteBrick(this);
     }
 }

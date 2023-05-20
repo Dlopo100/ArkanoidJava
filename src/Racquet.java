@@ -4,11 +4,11 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 public class Racquet {
-	private static final int Y = 330;
-	private static final int WITH = 60;
-	private static final int HEIGHT = 10;
-	int x = 0;
-	int xa = 0;
+	private final int Y = 330;
+	private final int WITH = 60;
+	private final int HEIGHT = 10;
+	private double x = 0;
+	private double xa = 0;
 	private Game game;
 
 	public Racquet(Game game) {
@@ -17,13 +17,21 @@ public class Racquet {
         x = (700/2) - (WITH/2);
 	}
 
+	public double getX() {
+		return this.x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
 	public void move() {
 		if (x + xa > 0 && x + xa < game.getWidth() - WITH)
 			x = x + xa;
 	}
 
 	public void paint(Graphics2D g) {
-		g.fillRect(x, Y, WITH, HEIGHT);
+		g.fillRect((int)x, (int)Y, WITH, HEIGHT);
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -32,13 +40,13 @@ public class Racquet {
 
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-			xa = -game.speed;
+			xa = -game.getSpeed() * 1.2;
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-			xa = game.speed;
+			xa = game.getSpeed() * 1.2;
 	}
 
 	public Rectangle getBounds() {
-		return new Rectangle(x, Y, WITH, HEIGHT);
+		return new Rectangle((int)x, (int)Y, WITH, HEIGHT);
 	}
 
 	public int getTopY() {

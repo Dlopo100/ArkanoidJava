@@ -1,14 +1,16 @@
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
+
+import java.awt.geom.Ellipse2D;
 
 public class Ball {
 	private static final int DIAMETER = 30;
 	
-	int x = 350;
-	int y = 300;
-	int xa = -1;
-	int ya = 1;
+	double x = 350;
+	double y = 300;
+	double xa = -1;
+	double ya = -1;
 	private Game game;
 
 	public Ball(Game game) {
@@ -17,19 +19,40 @@ public class Ball {
 
 	void move() {
 		// boolean changeDirection = true;
+		int colision =  collision();
+		boolean hadejadodecolisionar = true;
 		if (x + xa < 0)
-			xa = game.speed;
+			xa = game.getSpeed();
 		else if (x + xa > game.getWidth() - DIAMETER)
-			xa = -game.speed;
+			xa = -game.getSpeed();
 		else if (y + ya < 0)
-			ya = game.speed;
+			ya = game.getSpeed();
 		else if (y + ya > game.getHeight() - DIAMETER)
 			game.gameOver();
-		else if (collision()){
-			ya = -game.speed;
-			y = game.racquet.getTopY() - DIAMETER;
-			game.speed++;
+		else if (colision != -1 && hadejadodecolisionar){
+			hadejadodecolisionar = false;
+			switch (colision) {
+				case 1:
+					xa = -game.getSpeed();
+					break;
+				case 2:
+					if (xa < 0)
+						xa = -game.getSpeed();
+					else{
+						xa = game.getSpeed();
+					}
+					break;
+				case 3:
+					xa = game.getSpeed();
+					break;
+			}
+
+			ya = -game.getSpeed();
+			game.setSpeed(game.getSpeed()+0.2);
 		} 
+		else if (colision == -1 && !hadejadodecolisionar){
+			hadejadodecolisionar = true;
+		}
         // else 
 			// changeDirection = false;
 		
@@ -39,29 +62,44 @@ public class Ball {
 		y = y + ya;
 	}
 
-	private boolean collision() {
-        // boolean collision_with_any_object = false;
-        // while (!collision_with_any_object){
-        //     for (int i = 0; i < game.bricks.size(); i++) {
-        //         if (game.bricks.get(i).getBounds().intersects(getBounds())) {
-        //             game.bricks.get(i).delteBrick();
-        //             collision_with_any_object = true;
-        //         }
-        //     }
-        //     if (game.racquet.getBounds().intersects(getBounds())) {
-        //         collision_with_any_object = true;
-        //     }
-        // }
-        // return collision_with_any_object;
-		return game.racquet.getBounds().intersects(getBounds());
+	private int collision() {
+		if (game.racquet.getBounds().intersects(getBounds())){ //toca o no amb la raqueta
+			
+			double racquetXpos = game.racquet.getX();
+			double ballXpos = this.x;
+			double diference = (double) racquetXpos / ballXpos;
+			if (diference > 1.1){
+				return 1;
+			}
+			else if (diference < 0.9){
+				return 3;
+			}
+			else {
+				return 2;
+			}
+		}
+		else {
+			return -1;
+		}
+
 	}
 
 	public void paint(Graphics2D g) {
         g.setColor(new java.awt.Color(255, 255, 255));
-		g.fillOval(x, y, DIAMETER, DIAMETER);
+		g.fillOval((int)x, (int)y, DIAMETER, DIAMETER);
 	}
 
-	public Rectangle getBounds() {
-		return new Rectangle(x, y, DIAMETER, DIAMETER);
+	public Rectangle2D getBounds() {
+		return new Ellipse2D.Double(x, y, DIAMETER, DIAMETER).getBounds2D();
 	}
+
+	public void oppositeWay() {
+		if (xa < 0)
+			xa = -game.getSpeed();
+		else{
+			xa = game.getSpeed();
+		}
+		ya = game.getSpeed();
+	}
+
 }

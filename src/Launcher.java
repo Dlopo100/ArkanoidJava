@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.SystemTray;
 import java.awt.FontMetrics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -17,16 +16,20 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class Launcher extends JPanel {
-    // private String[] opciones = {"Jugar", "Salir"};
     private int WIDTH = 350;
     private int HEIGHT = 500;
     private int widthButton = 100;
     private int heightButton = 50;
     private int yButtonInitial = 125;
+    private Main main;
 
 	private JFrame windowFrame = new JFrame("Mini Tennis - Launcher");
 
     private String[] buttonStrings = {"Jugar", "Opciones", "Salir"};
+
+    public Launcher(Main mainSended){
+        this.main = mainSended;
+    }
 
 
     private void paintButtons(Graphics2D g){
@@ -35,7 +38,6 @@ public class Launcher extends JPanel {
         // System.out.println(diferenceBetweenButtons);
 
         for (int i = 0; i < buttonStrings.length; i++) {
-            System.out.println("Button " + (i+1) + " Painting" );
             String bString = buttonStrings[i];
             JButton button = new JButton(bString);
             button.setBounds((this.WIDTH/2)-(widthButton/2), yButton, widthButton, heightButton);
@@ -44,10 +46,7 @@ public class Launcher extends JPanel {
             //Add button to frame
             windowFrame.add(button);
             yButton += heightButton + diferenceBetweenButtons;
-            System.out.println("Button " + (i+1) + " Painted" );
-            System.out.println("----");
         }
-        // windowFrame.repaint();
     }
 
 
@@ -57,7 +56,7 @@ public class Launcher extends JPanel {
                     switch (id_button) {
                         case 0:
                             System.out.println("Jugar");
-                            new Main().launcher_button_clicked(id_button);
+                            main.launcher_button_clicked(id_button);
                             break;
                         case 1:
                             System.out.println("Opciones");
@@ -115,35 +114,10 @@ public class Launcher extends JPanel {
         windowFrame.setLayout(null); // set layout to null
         windowFrame.setResizable(false); //fix size
 
-		// while (true) {
-		// 	// move();
-		// 	repaint();
-		// 	Thread.sleep(10);
-		// }
-
     }
-    // public static void main(String[] args) throws InterruptedException {
-    //     Launcher launcher = new Launcher();
-    //     start();
-    // } 
 
-    public void setJFrameVisible(boolean visible){
-        System.out.println("setVisible");
-        System.out.println(visible);
-        System.out.println(this.windowFrame.isVisible());
-        this.windowFrame.setVisible(visible);
-        this.windowFrame.dispose();
-        windowFrame.setVisible(false);
-        windowFrame.dispose();
-        this.setVisible(visible);
-        // this.des
-        destroy();
-    }
-    //void destroy object(){
     public void destroy(){
         windowFrame.dispose();
-        this.windowFrame.dispose();
-        this.windowFrame = null;
     }
 
     

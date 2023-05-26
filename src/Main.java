@@ -1,42 +1,39 @@
+import java.util.Scanner;
+
 public class Main {
     private Launcher launcher;
     private Game game;
+    Scanner sc = new Scanner(System.in);
     public static void main(String[] args) throws InterruptedException {
-        // Game game = new Game();
-        // game.startGame();
-
         Main main = new Main();
         main.start();
-        
-
-
-
     }
 
     public void start() throws InterruptedException {
-        launcher = new Launcher();
-        launcher.start();
-        System.out.println("Launcher started");
-        System.out.println(launcher);
-
+        this.launcher = new Launcher(this);
+        this.game = new Game();
+        // this.launcher.start();
+        GameInit();
+        //sc.nextLine();
     }
-    public void launcher_button_clicked(int id_button){
-        
-        // try {
-        //     game.startGame();
-        // } catch (InterruptedException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
-        //destroy launcher
 
+    public void launcher_button_clicked(int id_button) {
 
         System.out.println("Button " + id_button + " Clicked");
-        System.out.println(launcher);
-        launcher.setJFrameVisible(false);
-        // launcher.dispose();
-        // launcher = null;
+        System.out.println(this.launcher);
+        launcher.destroy();
+        
+        try {
+            GameInit();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         
         System.out.println("Launcher destroyed");
+    }
+    public void GameInit() throws InterruptedException{
+        System.out.println("GameInit");
+        game.init();
+
     }
 }

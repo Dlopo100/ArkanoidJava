@@ -4,6 +4,7 @@ public class BrickBlue extends Brick{
     }
     
     protected void collisionWithBall() {
+        game.racquet.newSpeedUp();
         delteBrick();
     }
 }

@@ -11,14 +11,16 @@ public class Racquet {
 	private int y;
 	private Game game;
 	private Ball ball;
+	private boolean speedUp = false;
+	private Double speedNormal = 1.2;
+	private Double speedFast = 1.5;
 
 	public int getWidth() {
 		return width;
 	}
 
-	public Racquet(Game game, Ball ball) {
+	public Racquet(Game game) {
 		this.game = game;
-		this.ball = ball;
         x = (700/2) - (width/2);
 	}
 
@@ -44,14 +46,31 @@ public class Racquet {
 	}
 
 	public void keyPressed(KeyEvent e) {
+		Double speed = speedNormal;
+		if (speedUp)
+			speed = speedFast;
 		if (e.getKeyCode() == KeyEvent.VK_LEFT)
-			xa = -game.getSpeed() * 1.2;
+			xa = -game.getSpeed() * speed;
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-			xa = game.getSpeed() * 1.2;
+			xa = game.getSpeed() * speed;
 		if (e.getKeyCode() == KeyEvent.VK_SPACE)
-			ball.thrust();
+			game.ball.thrust();
 	}
+	public void newSpeedUp(){
 
+        Thread thread = new Thread(new Runnable() {
+            public void run() {
+				speedUp = true;
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				speedUp = false;
+			}
+        });
+        thread.start();
+	}
 	public Rectangle getBounds() {
 		return new Rectangle((int)x, (int)y, width, height);
 	}

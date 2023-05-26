@@ -17,7 +17,7 @@ public class Game extends JPanel {
 
 	JFrame frame = new JFrame("Mini Tennis");
 	Ball ball = new Ball(this);
-	Racquet racquet = new Racquet(this, ball);
+	Racquet racquet = new Racquet(this);
 	ArrayList<Brick> bricks = new ArrayList<Brick>();
 	ArrayList<Brick> bricksForDelate = new ArrayList<Brick>();
 

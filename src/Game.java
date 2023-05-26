@@ -72,8 +72,7 @@ public class Game extends JPanel {
 	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		ball.paint(g2d);
 		racquet.paint(g2d);
 		for (int i = 0; i < bricks.size(); i++) {
@@ -124,21 +123,26 @@ public class Game extends JPanel {
 
 	}
 
-	public static void main(String[] args) throws InterruptedException {
-		Game game = new Game();
-		game.frame.add(game);
-		game.frame.setSize(700, 400);
-		game.frame.setVisible(true);
-		game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		game.setBackground(Color.BLACK);
-		game.paintBricks();
+	public void startGame() throws InterruptedException  {
+		
+		this.frame.add(this);
+		this.frame.setSize(700, 400);
+		this.frame.setVisible(true);
+        this.frame.setLayout(null); // set layout to null
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBackground(Color.BLACK);
+		this.paintBricks();
 
 		while (true) {
-			game.move();
-			game.repaint();
+			this.move();
+			this.repaint();
 			Thread.sleep(10);
 		}
 	}
+	// public static void main(String[] args) throws InterruptedException  {
+	// 	Game game = new Game();
+	// 	game.startGame();
+	// }
 
 	public int getFrameHeight() {
 		return frame.getHeight();

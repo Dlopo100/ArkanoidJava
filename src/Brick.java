@@ -31,7 +31,7 @@ abstract public class Brick {
 
     public void checkCollision(){
 		boolean colision =  collisionWithBall();
-        System.out.println(colision);
+        // System.out.println(colision);
 		if (colision){
             //hide block 
             game.ball.oppositeWay();

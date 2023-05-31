@@ -13,7 +13,7 @@ public class Racquet {
 	private Ball ball;
 	private boolean speedUp = false;
 	private Double speedNormal = 1.2;
-	private Double speedFast = 1.5;
+	private Double speedFast = 2.0;
 
 	public int getWidth() {
 		return width;
@@ -84,6 +84,5 @@ public class Racquet {
 		x = (game.getWidth()/2) - (width/2);
 		xa = 0;
 		y = (int) (game.getHeight() - (game.getHeight()*0.079) - (height/2)) ;
-		System.out.println("Racquet: " + x + " " + y + " " + width + " " + height);
 	}
 }

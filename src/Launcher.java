@@ -12,10 +12,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class Launcher extends JPanel {
+public class Launcher extends JFrame {
     private int WIDTH = 350;
     private int HEIGHT = 500;
     private int widthButton = 100;
@@ -23,51 +22,63 @@ public class Launcher extends JPanel {
     private int yButtonInitial = 125;
     private Main main;
 
-	private JFrame windowFrame = new JFrame("Mini Tennis - Launcher");
 
     private String[] buttonStrings = {"Jugar", "Opciones", "Salir"};
+    private JButton[] jButtons = new JButton[buttonStrings.length];
 
     public Launcher(Main mainSended){
         this.main = mainSended;
+        this.setSize(WIDTH+15, HEIGHT); // set window size
+        this.setVisible(true); // show window
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close window
+        this.setLocationRelativeTo(null); // center window
+        this.setBackground(Color.BLACK); // set background color
+        this.setLayout(null); // set layout to null
+        this.setResizable(false); //fix size
+        this.setTitle("Mini Tennis - Launcher"); // set title
+        this.createButtons((Graphics2D) this.getGraphics());
     }
 
-
-    private void paintButtons(Graphics2D g){
+    private void createButtons(Graphics2D g){
         int yButton = this.yButtonInitial;
         int diferenceBetweenButtons = this.CalculateBeetweenButtons(g);
-        // System.out.println(diferenceBetweenButtons);
-
         for (int i = 0; i < buttonStrings.length; i++) {
             String bString = buttonStrings[i];
-            JButton button = new JButton(bString);
-            button.setBounds((this.WIDTH/2)-(widthButton/2), yButton, widthButton, heightButton);
-            button.addActionListener(createActionListener(i));
+            if (i == 1) {
+                if (main.isSoundState()) {
+                    bString = "Sonido: ON";
+                } else {
+                    bString = "Sonido: OFF";
+                }
+            }
+            jButtons[i] = new JButton(bString);
+            jButtons[i].setBounds((this.WIDTH/2)-(widthButton/2), yButton, widthButton, heightButton);
+            jButtons[i].addActionListener(createActionListener(i));
     
-            //Add button to frame
-            windowFrame.add(button);
             yButton += heightButton + diferenceBetweenButtons;
         }
     }
 
+    private void paintButtons(){
+        for (int i = 0; i < buttonStrings.length; i++) {
+            this.add(jButtons[i]);
+        }
+    }
 
     private ActionListener createActionListener(int id_button) {
         ActionListener acEvent = new ActionListener(){  
                 public void actionPerformed(ActionEvent e){   
-                    switch (id_button) {
-                        case 0:
-                            System.out.println("Jugar");
-                            main.launcher_button_clicked(id_button);
-                            break;
-                        case 1:
-                            System.out.println("Opciones");
-                            break;
-                        case 2:
-                            System.out.println("Salir");
-                            System.exit(0);
-                            break;
-                        default:
-                            break;
-                    }
+                    if (id_button == 1) {
+                        if (main.isSoundState()) {
+                            jButtons[id_button].setText("Sonido: OFF");
+                            main.setSoundState(false);
+                        } else {
+                            jButtons[id_button].setText("Sonido: ON");
+                            main.setSoundState(true);
+                        }
+                        repaint();
+                    } else 
+                        main.launcher_button_clicked(id_button);
                 }  
             };
         return acEvent;
@@ -101,26 +112,12 @@ public class Launcher extends JPanel {
         this.drawCenteredString(g2d, "Arkanoid", new Rectangle(0, 30, this.WIDTH, 50), new Font("Verdana", Font.BOLD, 30), Color.BLACK);
         this.drawCenteredString(g2d, "by Pol Dotras", new Rectangle(this.WIDTH/2-7, 67, 75, 20), new Font("Verdana", Font.PLAIN, 12), Color.BLACK);
 
-        this.paintButtons(g2d);
+        this.paintButtons();
     }
 
-    public void start(){
-        windowFrame.add(this); // add panel to window
-        windowFrame.setSize(WIDTH+15, HEIGHT); // set window size
-        windowFrame.setVisible(true); // show window
-        windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close window
-        windowFrame.setLocationRelativeTo(null); // center window
-        windowFrame.setBackground(Color.BLACK); // set background color
-        windowFrame.setLayout(null); // set layout to null
-        windowFrame.setResizable(false); //fix size
-
-    }
 
     public void destroy(){
-        windowFrame.dispose();
+        this.dispose();
     }
-
-    
-    
-    
+   
 }

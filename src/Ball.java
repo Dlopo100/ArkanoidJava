@@ -13,11 +13,17 @@ public class Ball {
 	private boolean haDejadoDeCollisionarConLaRaqueta;
 	private boolean haDejadoDeSobrePassarElLimite;
 	private Boolean isBallFree;
+
+	public Boolean getIsBallFree() {
+		return this.isBallFree;
+	}
+
 	private Game game;
 	
 
 	public Ball(Game game) {
 		this.game = game;
+		PrepareToStart();
 	}
 
 	public void move() {
@@ -35,6 +41,8 @@ public class Ball {
 				game.SubstractLive();
 			}
 			else if (isCollisionRaquet != -1 && haDejadoDeCollisionarConLaRaqueta){
+				if (game.isSoundState())
+					Sound.BALL.play();
 				haDejadoDeCollisionarConLaRaqueta = false;
 				switch (isCollisionRaquet) {
 					case 1:
@@ -53,7 +61,7 @@ public class Ball {
 				}
 
 				ya = -game.getSpeed();
-				game.setSpeed(game.getSpeed()+0.2);
+				game.setSpeed(game.getSpeed()+0.05);
 			} 
 			else if (isCollisionRaquet == -1 && !haDejadoDeCollisionarConLaRaqueta){
 				haDejadoDeCollisionarConLaRaqueta = true;
@@ -62,7 +70,6 @@ public class Ball {
 				// changeDirection = false;
 			
 			// if (changeDirection) 
-			// 	Sound.BALL.play();
 			x = x + xa;
 			y = y + ya;
 		}
@@ -78,10 +85,10 @@ public class Ball {
 			double racquetXpos = game.racquet.getX();
 			double ballXpos = this.x;
 			double diference = (double) racquetXpos / ballXpos;
-			if (diference > 1.1){
+			if (diference > 1.05){
 				return 1;
 			}
-			else if (diference < 0.9){
+			else if (diference < 0.85){
 				return 3;
 			}
 			else {

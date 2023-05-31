@@ -26,30 +26,7 @@ public class Game extends JPanel {
 	private int widthScreen = 700;
 	private int heightScreen = 400;
 	private int lives = 3;
-
-	public double getSpeed() {
-		return this.speed;
-	}
-
-	public void setSpeed(double speed) {
-		this.speed = speed;
-	}
-	
-	public int getScore() {
-		return this.score ;
-	}
-
-	public int getWidthScreen() {
-		return this.widthScreen;
-	}
-
-	public int getHeightScreen() {
-		return this.heightScreen;
-	}
-
-	public int getLives() {
-		return this.lives ;
-	}
+	private boolean soundState;
 
 	public Game() {
 		addKeyListener(new KeyListener() {
@@ -68,8 +45,44 @@ public class Game extends JPanel {
 			}
 		});
 		setFocusable(true);
-		// Sound.BACK.loop();
 	}
+
+	public boolean isSoundState() {
+		return this.soundState;
+	}
+
+	public void setSoundState(boolean soundState) {
+		this.soundState = soundState;
+	}
+
+	public double getSpeed() {
+		return this.speed;
+	}
+
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
+	
+	public int getScore() {
+		return this.score ;
+	}
+
+	public int setScore(int score) {
+		return this.score = score;
+	}
+
+	public int getWidthScreen() {
+		return this.widthScreen;
+	}
+
+	public int getHeightScreen() {
+		return this.heightScreen;
+	}
+
+	public int getLives() {
+		return this.lives ;
+	}
+
 
 	
 	private void move() {
@@ -95,17 +108,28 @@ public class Game extends JPanel {
 		g2d.setColor(Color.GRAY);
 		g2d.setFont(new Font("Verdana", Font.BOLD, 30));
 		g2d.drawString("Points:" + String.valueOf(getScore()), 10, 30);
-		g2d.setColor(Color.GRAY);
-		g2d.setFont(new Font("Verdana", Font.BOLD, 30));
 		g2d.drawString("Vides:" + String.valueOf(getLives()), 10, 60);
+		if (ball.getIsBallFree() == false){
+			g2d.drawString("Pulsa Espacio para lanzar", 125, 250);
+		}
+		
 	}
 
 	public void gameOver() {
 		RestartGame();
-		// Sound.BACK.stop();
-		// Sound.GAMEOVER.play();
-		JOptionPane.showMessageDialog(this, "your score is: " + getScore(),
+		if (this.isSoundState())
+			Sound.BACK.stop();
+		JOptionPane.showMessageDialog(this, "La teva puntuacio ha sigut de: " + getScore(),
 				"Game Over", JOptionPane.YES_NO_OPTION);
+		System.exit(ABORT);
+	}
+
+	public void gameWin() {
+		RestartGame();
+		if (this.isSoundState())
+			Sound.BACK.stop();
+		JOptionPane.showMessageDialog(this, "La teva puntuacio ha sigut de: " + getScore(),
+				"Game Win", JOptionPane.YES_NO_OPTION);
 		System.exit(ABORT);
 	}
 
@@ -151,8 +175,8 @@ public class Game extends JPanel {
 
 	}
 
-	public void init() throws InterruptedException  {
-		
+	public void init(boolean soundState) throws InterruptedException  {
+		this.soundState = soundState;
 		this.frame.add(this);
 		this.frame.setSize(widthScreen, heightScreen);
 		this.frame.setResizable(false);
@@ -171,14 +195,18 @@ public class Game extends JPanel {
 			this.repaint();
 			Thread.sleep(10);
 		}
+		
 	}
 
 	public void delteBricks() {
 		for(Brick brick : bricksForDelate) {
 			bricks.remove(brick);
-			// score += brick.getScore();
+			setScore(getScore() + brick.getScore());
 		}
 		bricksForDelate.clear();
+		if (bricks.size() == 0) {
+			this.gameWin();
+		}
 	}
 
 	public void delteBrick(Brick brick) {
@@ -186,6 +214,11 @@ public class Game extends JPanel {
 	}
 
 	public void SubstractLive() {
+		
+		if (this.isSoundState()){
+			Sound.BACK.stop();
+			Sound.GAMEOVER.play();
+		}
 		this.lives -= 1;
 		if(this.lives == 0) {
 			this.gameOver();
@@ -199,7 +232,8 @@ public class Game extends JPanel {
 	}
 
 	public void StartGame(){
-		//set speed
+		if (this.isSoundState())
+			Sound.BACK.loop();
 		ball.PrepareToStart();
 		racquet.PrepareToStart();
 	}

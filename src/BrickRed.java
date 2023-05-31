@@ -25,7 +25,7 @@ public class BrickRed extends Brick {
                 while (y < game.getHeightScreen()-height && !destroy) {
                     y++;
                     try {
-                        Thread.sleep(10);
+                        Thread.sleep(5);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

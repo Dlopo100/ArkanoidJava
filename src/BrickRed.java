@@ -30,7 +30,7 @@ public class BrickRed extends Brick {
                         e.printStackTrace();
                     }
                     if (iscollisionWithRacquet()) {
-                        game.gameOver();
+                        game.gameFinish("Over");
                     }
                 }
                 delteBrick();

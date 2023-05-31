@@ -20,6 +20,7 @@ public class Game extends JPanel {
 	Racquet racquet = new Racquet(this);
 	ArrayList<Brick> bricks = new ArrayList<Brick>();
 	ArrayList<Brick> bricksForDelate = new ArrayList<Brick>();
+	JSONmanage manageJSON;
 
 	private int score = 0;
 	private double speed = 2;
@@ -27,8 +28,10 @@ public class Game extends JPanel {
 	private int heightScreen = 400;
 	private int lives = 3;
 	private boolean soundState;
+	private String usuario;
 
 	public Game() {
+		manageJSON = new JSONmanage("puntuacions.json");
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -115,21 +118,38 @@ public class Game extends JPanel {
 		
 	}
 
-	public void gameOver() {
+	public void gameFinish(String state){
 		RestartGame();
-		if (this.isSoundState())
-			Sound.BACK.stop();
-		JOptionPane.showMessageDialog(this, "La teva puntuacio ha sigut de: " + getScore(),
-				"Game Over", JOptionPane.YES_NO_OPTION);
-		System.exit(ABORT);
-	}
 
-	public void gameWin() {
-		RestartGame();
 		if (this.isSoundState())
 			Sound.BACK.stop();
-		JOptionPane.showMessageDialog(this, "La teva puntuacio ha sigut de: " + getScore(),
-				"Game Win", JOptionPane.YES_NO_OPTION);
+
+		manageJSON.newRegister(usuario, getScore());
+		String message;
+		if (state.equals("Win")){
+			message = "Has guanyat!";
+		}
+		else{
+			message = "Has perdut!";
+		}
+
+		message += "\nLa teva puntuacio ha sigut de: " + getScore();
+
+		int idRegisterHighScore = manageJSON.getIdRegisterHighScoreUser(usuario);
+		if (idRegisterHighScore != -1){
+			String dateRecord = manageJSON.getParameterWithRegisterId(idRegisterHighScore, "data");
+			dateRecord += " a las " + manageJSON.getParameterWithRegisterId(idRegisterHighScore, "hora");
+
+			int highScoreUser = Integer.parseInt(manageJSON.getParameterWithRegisterId(idRegisterHighScore, "puntuacio"));
+
+			message += "\nEl teu record es de " + highScoreUser + " punts i va ser registrada el " + dateRecord;
+
+
+		}
+
+
+		JOptionPane.showMessageDialog(this, message, "Game "+ state, JOptionPane.YES_NO_OPTION);
+
 		System.exit(ABORT);
 	}
 
@@ -175,7 +195,8 @@ public class Game extends JPanel {
 
 	}
 
-	public void init(boolean soundState) throws InterruptedException  {
+	public void init(boolean soundState, String usuario) throws InterruptedException  {
+		this.usuario = usuario;
 		this.soundState = soundState;
 		this.frame.add(this);
 		this.frame.setSize(widthScreen, heightScreen);
@@ -184,9 +205,7 @@ public class Game extends JPanel {
         this.frame.setLayout(null); // set layout to null
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.repaint();
-		//setBackground(#ffeed9);
 		this.setBackground(new Color(255, 238, 217));
-		// this.setBackground(Color.);
 		this.paintBricks();
 		StartGame();
 
@@ -205,7 +224,7 @@ public class Game extends JPanel {
 		}
 		bricksForDelate.clear();
 		if (bricks.size() == 0) {
-			this.gameWin();
+			this.gameFinish("Win");
 		}
 	}
 
@@ -221,7 +240,7 @@ public class Game extends JPanel {
 		}
 		this.lives -= 1;
 		if(this.lives == 0) {
-			this.gameOver();
+			this.gameFinish("Over");
 		}
 		for (Brick brick : bricks) {
 			if (!brick.collide) {

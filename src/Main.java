@@ -57,7 +57,7 @@ public class Main {
                     do {
                         usuario = JOptionPane.showInputDialog("Introdueix el teu nom:");
                     } while (usuario.equals(""));
-                    game.init(soundState);
+                    game.init(soundState, usuario);
                 } 
                 catch (InterruptedException e) {
                     e.printStackTrace();

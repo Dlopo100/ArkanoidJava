@@ -10,7 +10,6 @@ public class Racquet {
 	private double xa;
 	private int y;
 	private Game game;
-	private Ball ball;
 	private boolean speedUp = false;
 	private Double speedNormal = 1.2;
 	private Double speedFast = 2.0;

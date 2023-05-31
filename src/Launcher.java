@@ -17,7 +17,7 @@ import javax.swing.JFrame;
 public class Launcher extends JFrame {
     private int WIDTH = 350;
     private int HEIGHT = 500;
-    private int widthButton = 100;
+    private int widthButton = 150;
     private int heightButton = 50;
     private int yButtonInitial = 125;
     private Main main;

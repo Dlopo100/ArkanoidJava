@@ -29,6 +29,7 @@ public class Game extends JPanel {
 	private int lives = 3;
 	private boolean soundState;
 	private String usuario;
+	private Sound Sound = new Sound();
 
 	public Game() {
 		manageJSON = new JSONmanage("puntuacions.json");
@@ -124,7 +125,6 @@ public class Game extends JPanel {
 		if (this.isSoundState())
 			Sound.BACK.stop();
 
-		manageJSON.newRegister(usuario, getScore());
 		String message;
 		if (state.equals("Win")){
 			message = "Has guanyat!";
@@ -150,6 +150,7 @@ public class Game extends JPanel {
 
 		JOptionPane.showMessageDialog(this, message, "Game "+ state, JOptionPane.YES_NO_OPTION);
 
+		manageJSON.newRegister(usuario, getScore());
 		System.exit(ABORT);
 	}
 
